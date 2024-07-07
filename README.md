@@ -13,7 +13,7 @@ Hereby, we present the steps to use this tool:
 4. Run the python command NeuroTmap.py
 - The required packages are: numpy, pandas, matplotlib, argparse, subprocess and os.
 - The command line arguments should be the name of the lesions, separated by spaces, without the file extensions (i.e. .nii or .nii.gz)
-- Example of a command line: 'python3 NeuroT-Map.py patient01 patient02 patient 03'
+- Example of a command line: 'python3 NeuroT-Map.py patient01 patient02 patient03'
 5. Find the command outputs inside the main folder. The command will produce 3 outputs for each lesion:
 - CSV file called output_les_dis_'lesion_name'. This file contains:
 		 - the sum of the receptor or transporter location density map voxels intersected by the lesion (loc_inj_'lesion_name') 
