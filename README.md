@@ -17,10 +17,14 @@ Hereby, we present the steps to use this tool:
 5. Find the command outputs inside the main folder. The command will produce 3 outputs for each lesion:
 
   a) CSV file called output_les_dis_'lesion_name'. This file contains:
-  	- the sum of the receptor or transporter location density map voxels intersected by the lesion (loc_inj_'lesion_name')
-  	- the percentage of the location density map intersected by the lesion, calculated by dividing the loc_inj_'lesion_name' value by the sum of all voxels of the receptor or transporter location density map * 100 (perc_loc_inj_'lesion_name')
-  	- the sum of the receptor or transporter white matter projection map voxels intersected by the lesion (tract_inj_'lesion_name')
-  	- the percentage of the white matter projection map intersected by the lesion, calculated by dividing the tract_inj_'lesion_name' value by the sum of all voxels of the receptor or transporter white matter projection map * 100 (perc_tract_inj_'lesion_name')
+  	
+   - the sum of the receptor or transporter location density map voxels intersected by the lesion (loc_inj_'lesion_name')
+   
+   - the percentage of the location density map intersected by the lesion, calculated by dividing the loc_inj_'lesion_name' value by the sum of all voxels of the receptor or transporter location density map * 100 (perc_loc_inj_'lesion_name')
+     
+   - the sum of the receptor or transporter white matter projection map voxels intersected by the lesion (tract_inj_'lesion_name')
+     
+   - the percentage of the white matter projection map intersected by the lesion, calculated by dividing the tract_inj_'lesion_name' value by the sum of all voxels of the receptor or transporter white matter projection map * 100 (perc_tract_inj_'lesion_name')
   
   b) CSV file called output_pre_post_synaptic_ratio_'lesion_name'. This file contains the pre and postsynaptic ratios of the studied neurotransmitter systems.
 
