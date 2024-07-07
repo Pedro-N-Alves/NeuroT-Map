@@ -1,5 +1,7 @@
 Welcome to NeuroT-Map!
+
 With this tool you can chart how stroke damages neurotransmitter systems.
+
 Manuscript: Alves PN, Nozais V, Hansen J, Corbetta M, Nachev P, Martins IP, Thiebaut de Schotten M (2024). Neurotransmitters’ white matter mapping unveils the neurochemical fingerprints of stroke. Research Square. https://doi.org/10.21203/rs.3.rs-3937453/v1
 
 Hereby, we present the steps to use this tool:
