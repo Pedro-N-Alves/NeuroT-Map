@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # List of binarized lesions
 lesions=($@)
 

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import argparse
 import subprocess
 import os
+import shutil
 
 # Parse the command-line arguments (in this case, the name of the lesions, as explained in the README file)  
 parser = argparse.ArgumentParser()
@@ -15,6 +16,13 @@ lesions_args = ' '.join(args.lesions)
 # Run the command 'NeuroTmap_lesion_int_nt.sh'
 cmd_lesion_int_nt ='./NeuroTmap_lesion_int_nt.sh '+str(lesions_args)
 
+# 输出文件夹
+CSV_DIR = 'results_csv'
+PNG_DIR = 'results_png'
+
+os.makedirs(CSV_DIR, exist_ok=True)
+os.makedirs(PNG_DIR, exist_ok=True)
+
 # Function to calculate the pre and postsynaptic ratios
 def individual_profile():
     for lesion in args.lesions:
@@ -23,7 +31,8 @@ def individual_profile():
         # 'trans_inj' refers to the transporter location density map voxels intersected by the lesion
         # 'recep_tract_inj' refers to the receptor white matter projection map voxels intersected by the lesion
         # 'trans_tract_inj' refers to the transporter white matter projection map voxels intersected by the lesion
-        tab=pd.read_csv('output_'+str(lesion)+'.csv', sep=" ", index_col=0)
+        tmp_csv = 'output_' + str(lesion) + '.csv' # 修改
+        tab = pd.read_csv(tmp_csv, sep=" ", index_col=0)
 
         all_inj = tab.loc['injuries', ['A4B2_loc', 'M1_loc', 'VAChT_loc', 'D1_loc', 'D2_loc', 'DAT_loc', 'NAT_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc', '5HTT_loc']]
         all_tot = tab.loc['totals', ['A4B2_loc', 'M1_loc', 'VAChT_loc', 'D1_loc', 'D2_loc', 'DAT_loc', 'NAT_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc', '5HTT_loc']]
@@ -125,19 +134,31 @@ def individual_profile():
 		# Create output_les_dis_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
         output_les_dis = pd.DataFrame(output_les_dis, columns=['A4B2', 'M1', 'VAChT', 'D1', 'D2', 'DAT', 'Nor', '5HT1a', '5HT1b', '5HT2a', '5HT4', '5HT6', '5HTT'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
-        output_les_dis.to_csv('output_les_dis_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        output_les_dis.to_csv(
+            os.path.join(CSV_DIR, 'output_les_dis_' + str(lesion) + '.csv'),
+            sep=" ", header=True, index=True
+        ) #修改
 	
 		# Create output_pre_post_synaptic_ratio_'lesion_name'.csv (please see README file for more details)
         pre_pos_ratio = pd.DataFrame(radii3, index=['A4B2 presynaptic', 'M1 presynaptic', 'D1 presynaptic', 'D2 presynaptic', '5HT1a presynaptic', '5HT1b presynaptic', '5HT2a presynaptic', '5HT4 presynaptic', '5HT6 presynaptic', 'VAChT postsynaptic', 'DAT postsynaptic', '5HTT postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
         pre_pos_ratio = pre_pos_ratio.transpose()
-        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio.to_csv(
+            os.path.join(CSV_DIR, 'output_pre_post_synaptic_ratio_' + str(lesion) + '.csv'),
+            sep=" ", header=True, index=True
+        )
 
 		# Create output_'lesion_name'.png (please see README file for more details)
-        plt.savefig('output_'+str(lesion)+'.png', bbox_inches='tight')
+        plt.savefig(
+            os.path.join(PNG_DIR, 'output_' + str(lesion) + '.png'),
+            bbox_inches='tight'
+        )
         plt.clf()
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt.sh' command
-        os.remove('output_'+str(lesion)+'.csv')
+        shutil.move(
+            tmp_csv,
+            os.path.join(CSV_DIR, 'output_' + str(lesion) + '.csv')
+        )
 
 subprocess.run(cmd_lesion_int_nt, shell=True)
 individual_profile()
