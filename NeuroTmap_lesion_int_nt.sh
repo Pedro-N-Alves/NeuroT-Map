@@ -22,12 +22,15 @@ for lesion in ${lesions[@]}; do
 		total_voxels=$(fslstats ./PET_nifti_images/${i}_median_scale01.nii.gz -V | awk '{print $1}')
 		total=$(echo $total_mean $total_voxels | awk '{printf "%4.3f\n",$1*$2}')
 		totals+=(${total})
-		fslmaths ./PET_nifti_images/${i}_median_scale01.nii.gz -mas ./lesions/${lesion}.nii.gz ${i}_median_scale01_mas_lesion.nii.gz
-		injury_mean=$(fslstats ${i}_median_scale01_mas_lesion.nii.gz -M | awk '{print $1}')
-		injury_voxels=$(fslstats ${i}_median_scale01_mas_lesion.nii.gz -V | awk '{print $1}')
-		injury=$(echo $injury_mean $injury_voxels | awk '{printf "%4.3f\n",$1*$2}')
+
+		tmpfile=${i}_median_scale01_mas_lesion_${lesion}_$$.nii.gz
+
+		fslmaths ./PET_nifti_images/${i}_median_scale01.nii.gz -mas ./lesions/${lesion}.nii.gz ${tmpfile}
+		injury_mean=$(fslstats ${tmpfile} -M | awk '{print $1}')
+		injury_voxels=$(fslstats ${tmpfile} -V | awk '{print $1}')
+	 	injury=$(echo $injury_mean $injury_voxels | awk '{printf "%4.3f\n",$1*$2}')
 		injuries+=($injury)
-		rm ${i}_median_scale01_mas_lesion.nii.gz
+		rm -f ${tmpfile}
 	done
 
 	for i in ${maps_tract[@]}; do
@@ -36,12 +39,15 @@ for lesion in ${lesions[@]}; do
 		total_voxels=$(fslstats ./functionnectome_maps/functionnectome_anat_${i}.nii.gz -V | awk '{print $1}')
 		total=$(echo $total_mean $total_voxels | awk '{printf "%4.3f\n",$1*$2}')
 		totals+=(${total})
-		fslmaths ./functionnectome_maps/functionnectome_anat_${i}.nii.gz -mas ./lesions/${lesion}.nii.gz functionnectome_anat_${i}_mas_lesion.nii.gz
-		injury_mean=$(fslstats functionnectome_anat_${i}_mas_lesion.nii.gz -M | awk '{print $1}')
-		injury_voxels=$(fslstats functionnectome_anat_${i}_mas_lesion.nii.gz -V | awk '{print $1}')
+
+		tmpfile=functionnectome_anat_${i}_mas_lesion_${lesion}_$$.nii.gz
+
+		fslmaths ./functionnectome_maps/functionnectome_anat_${i}.nii.gz -mas ./lesions/${lesion}.nii.gz ${tmpfile}
+		injury_mean=$(fslstats ${tmpfile} -M | awk '{print $1}')
+		injury_voxels=$(fslstats ${tmpfile} -V | awk '{print $1}')
 		injury=$(echo $injury_mean $injury_voxels | awk '{printf "%4.3f\n",$1*$2}')
 		injuries+=($injury)
-		rm functionnectome_anat_${i}_mas_lesion.nii.gz
+		rm -f ${tmpfile}
 	done
 
 
