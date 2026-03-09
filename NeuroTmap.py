@@ -73,7 +73,18 @@ def individual_profile():
         radii1 = all_perc
         ax1.bar(theta1, radii1, width=width1, bottom=0.0, color=colors1, alpha=1, edgecolor='dimgray')
         ax1.yaxis.set_major_formatter('{x:1.3f}%')
-        ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        r1 = np.asarray(radii1, dtype=float)
+        r2 = np.asarray(radii2, dtype=float)
+
+        r1_max = np.nanmax(r1) if np.isfinite(np.nanmax(r1)) else 0
+        r2_max = np.nanmax(r2) if np.isfinite(np.nanmax(r2)) else 0
+
+        if r1_max <= 0:
+            r1_max = 1.0
+        if r2_max <= 0:
+            r2_max = 1.0
+
+        ax1.set_yticks(np.linspace(0, r1_max, 6))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
         ax1.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -88,7 +99,7 @@ def individual_profile():
         radii2 = all_tract_perc
         ax2.bar(theta2, radii2, width=width2, bottom=0.0, color=colors2, alpha=1, edgecolor='dimgray')
         ax2.yaxis.set_major_formatter('{x:1.3f}%')
-        ax2.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        ax2.set_yticks(np.linspace(0, r2_max, 6))
         ax2.set_rlabel_position(0)
         ax2.set_xticks(theta2)
         ax2.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -101,16 +112,16 @@ def individual_profile():
         theta3 = np.arange(0, 2 * np.pi, 2 * np.pi/12)
         radii3a = []
         for i in range(len(recep_tract_perc)):
-            if recep_tract_perc[i] == 0 and recep_perc[i] == 0:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/0.1)
+            if recep_tract_perc.iloc[i] == 0 and recep_perc.iloc[i] == 0:
+                radii3a.append(max(trans_perc.iloc[i], trans_tract_perc.iloc[i])/0.1)
             else:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/max(recep_perc[i], recep_tract_perc[i]))
+                radii3a.append(max(trans_perc.iloc[i], trans_tract_perc.iloc[i])/max(recep_perc.iloc[i], recep_tract_perc.iloc[i]))
         radii3b = []
         for i in range(len(recep_tract_perc)):
-            if trans_tract_perc[i] == 0 and trans_perc[i] == 0:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/0.1)
+            if trans_tract_perc.iloc[i] == 0 and trans_perc.iloc[i] == 0:
+                radii3b.append(max(recep_perc.iloc[i], recep_tract_perc.iloc[i])/0.1)
             else:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/max(trans_perc[i], trans_tract_perc[i]))
+                radii3b.append(max(recep_perc.iloc[i], recep_tract_perc.iloc[i])/max(trans_perc.iloc[i], trans_tract_perc.iloc[i]))
         radii3b = [(radii3b[0]+radii3b[1])/2, (radii3b[2]+radii3b[3])/2, (radii3b[4]+radii3b[5]+radii3b[6]+radii3b[7]+radii3b[8])/5]
         radii3 = np.append(radii3a, radii3b)
         colors3 = []
