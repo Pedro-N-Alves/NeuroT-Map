@@ -70,20 +70,14 @@ def individual_profile():
         width1 = 2 * np.pi/13 - 2 * np.pi/13 * 0.1
         theta1 = np.arange(0, 2 * np.pi, 2 * np.pi/13)
         colors1 = ["#B7B3D7", "#928CC1", "#6E66AD", "#B7DEDA", "#92CEC8", "#6BBDB5", "#EBA8B1", "#FCFCED", "#FBFAE2", "#F8F8D6", "#F8F6CB", "#F6F4BE", "#F5F2B3"]
-        radii1 = all_perc
+        
+        radii1 = np.asarray(all_perc, dtype=float)
+        r1_max = np.nanmax(radii1)
+        if (not np.isfinite(r1_max)) or r1_max <= 0:
+            r1_max = 1.0
+
         ax1.bar(theta1, radii1, width=width1, bottom=0.0, color=colors1, alpha=1, edgecolor='dimgray')
         ax1.yaxis.set_major_formatter('{x:1.3f}%')
-        r1 = np.asarray(radii1, dtype=float)
-        r2 = np.asarray(radii2, dtype=float)
-
-        r1_max = np.nanmax(r1) if np.isfinite(np.nanmax(r1)) else 0
-        r2_max = np.nanmax(r2) if np.isfinite(np.nanmax(r2)) else 0
-
-        if r1_max <= 0:
-            r1_max = 1.0
-        if r2_max <= 0:
-            r2_max = 1.0
-
         ax1.set_yticks(np.linspace(0, r1_max, 6))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
@@ -96,7 +90,12 @@ def individual_profile():
         width2 = 2 * np.pi/13 - 2 * np.pi/13 * 0.1
         theta2 = np.arange(0, 2 * np.pi, 2 * np.pi/13)
         colors2 = ["#B7B3D7", "#928CC1", "#6E66AD", "#B7DEDA", "#92CEC8", "#6BBDB5", "#EBA8B1", "#FCFCED", "#FBFAE2", "#F8F8D6", "#F8F6CB", "#F6F4BE", "#F5F2B3", "#6184B1", "#ECC1FF", "#B5C695", "#FCC477", "#ED967C"]
-        radii2 = all_tract_perc
+        radii2 = np.asarray(all_tract_perc, dtype=float)
+        
+        r2_max = np.nanmax(radii2)
+        if (not np.isfinite(r2_max)) or r2_max <= 0:
+            r2_max = 1.0
+
         ax2.bar(theta2, radii2, width=width2, bottom=0.0, color=colors2, alpha=1, edgecolor='dimgray')
         ax2.yaxis.set_major_formatter('{x:1.3f}%')
         ax2.set_yticks(np.linspace(0, r2_max, 6))
@@ -163,7 +162,7 @@ def individual_profile():
             os.path.join(PNG_DIR, 'output_' + str(lesion) + '.png'),
             bbox_inches='tight'
         )
-        plt.clf()
+        plt.close(fig)
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt.sh' command
         shutil.move(
