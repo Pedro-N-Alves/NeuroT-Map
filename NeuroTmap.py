@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import argparse
 import subprocess
 import os
+import shutil
 
 # Parse the command-line arguments (in this case, the name of the lesions, as explained in the README file)  
 parser = argparse.ArgumentParser()
@@ -15,6 +16,13 @@ lesions_args = ' '.join(args.lesions)
 # Run the command 'NeuroTmap_lesion_int_nt.sh'
 cmd_lesion_int_nt ='./NeuroTmap_lesion_int_nt.sh '+str(lesions_args)
 
+# 输出文件夹
+CSV_DIR = 'results_csv'
+PNG_DIR = 'results_png'
+
+os.makedirs(CSV_DIR, exist_ok=True)
+os.makedirs(PNG_DIR, exist_ok=True)
+
 # Function to calculate the pre and postsynaptic ratios
 def individual_profile():
     for lesion in args.lesions:
@@ -23,7 +31,8 @@ def individual_profile():
         # 'trans_inj' refers to the transporter location density map voxels intersected by the lesion
         # 'recep_tract_inj' refers to the receptor white matter projection map voxels intersected by the lesion
         # 'trans_tract_inj' refers to the transporter white matter projection map voxels intersected by the lesion
-        tab=pd.read_csv('output_'+str(lesion)+'.csv', sep=" ", index_col=0)
+        tmp_csv = 'output_' + str(lesion) + '.csv' # 修改
+        tab = pd.read_csv(tmp_csv, sep=" ", index_col=0)
 
         all_inj = tab.loc['injuries', ['A4B2_loc', 'M1_loc', 'VAChT_loc', 'D1_loc', 'D2_loc', 'DAT_loc', 'NAT_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc', '5HTT_loc']]
         all_tot = tab.loc['totals', ['A4B2_loc', 'M1_loc', 'VAChT_loc', 'D1_loc', 'D2_loc', 'DAT_loc', 'NAT_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc', '5HTT_loc']]
@@ -61,10 +70,15 @@ def individual_profile():
         width1 = 2 * np.pi/13 - 2 * np.pi/13 * 0.1
         theta1 = np.arange(0, 2 * np.pi, 2 * np.pi/13)
         colors1 = ["#B7B3D7", "#928CC1", "#6E66AD", "#B7DEDA", "#92CEC8", "#6BBDB5", "#EBA8B1", "#FCFCED", "#FBFAE2", "#F8F8D6", "#F8F6CB", "#F6F4BE", "#F5F2B3"]
-        radii1 = all_perc
+        
+        radii1 = np.asarray(all_perc, dtype=float)
+        r1_max = np.nanmax(radii1)
+        if (not np.isfinite(r1_max)) or r1_max <= 0:
+            r1_max = 1.0
+
         ax1.bar(theta1, radii1, width=width1, bottom=0.0, color=colors1, alpha=1, edgecolor='dimgray')
         ax1.yaxis.set_major_formatter('{x:1.3f}%')
-        ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        ax1.set_yticks(np.linspace(0, r1_max, 6))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
         ax1.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -76,10 +90,15 @@ def individual_profile():
         width2 = 2 * np.pi/13 - 2 * np.pi/13 * 0.1
         theta2 = np.arange(0, 2 * np.pi, 2 * np.pi/13)
         colors2 = ["#B7B3D7", "#928CC1", "#6E66AD", "#B7DEDA", "#92CEC8", "#6BBDB5", "#EBA8B1", "#FCFCED", "#FBFAE2", "#F8F8D6", "#F8F6CB", "#F6F4BE", "#F5F2B3", "#6184B1", "#ECC1FF", "#B5C695", "#FCC477", "#ED967C"]
-        radii2 = all_tract_perc
+        radii2 = np.asarray(all_tract_perc, dtype=float)
+        
+        r2_max = np.nanmax(radii2)
+        if (not np.isfinite(r2_max)) or r2_max <= 0:
+            r2_max = 1.0
+
         ax2.bar(theta2, radii2, width=width2, bottom=0.0, color=colors2, alpha=1, edgecolor='dimgray')
         ax2.yaxis.set_major_formatter('{x:1.3f}%')
-        ax2.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        ax2.set_yticks(np.linspace(0, r2_max, 6))
         ax2.set_rlabel_position(0)
         ax2.set_xticks(theta2)
         ax2.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -92,16 +111,16 @@ def individual_profile():
         theta3 = np.arange(0, 2 * np.pi, 2 * np.pi/12)
         radii3a = []
         for i in range(len(recep_tract_perc)):
-            if recep_tract_perc[i] == 0 and recep_perc[i] == 0:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/0.1)
+            if recep_tract_perc.iloc[i] == 0 and recep_perc.iloc[i] == 0:
+                radii3a.append(max(trans_perc.iloc[i], trans_tract_perc.iloc[i])/0.1)
             else:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/max(recep_perc[i], recep_tract_perc[i]))
+                radii3a.append(max(trans_perc.iloc[i], trans_tract_perc.iloc[i])/max(recep_perc.iloc[i], recep_tract_perc.iloc[i]))
         radii3b = []
         for i in range(len(recep_tract_perc)):
-            if trans_tract_perc[i] == 0 and trans_perc[i] == 0:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/0.1)
+            if trans_tract_perc.iloc[i] == 0 and trans_perc.iloc[i] == 0:
+                radii3b.append(max(recep_perc.iloc[i], recep_tract_perc.iloc[i])/0.1)
             else:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/max(trans_perc[i], trans_tract_perc[i]))
+                radii3b.append(max(recep_perc.iloc[i], recep_tract_perc.iloc[i])/max(trans_perc.iloc[i], trans_tract_perc.iloc[i]))
         radii3b = [(radii3b[0]+radii3b[1])/2, (radii3b[2]+radii3b[3])/2, (radii3b[4]+radii3b[5]+radii3b[6]+radii3b[7]+radii3b[8])/5]
         radii3 = np.append(radii3a, radii3b)
         colors3 = []
@@ -125,19 +144,31 @@ def individual_profile():
 		# Create output_les_dis_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
         output_les_dis = pd.DataFrame(output_les_dis, columns=['A4B2', 'M1', 'VAChT', 'D1', 'D2', 'DAT', 'Nor', '5HT1a', '5HT1b', '5HT2a', '5HT4', '5HT6', '5HTT'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
-        output_les_dis.to_csv('output_les_dis_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        output_les_dis.to_csv(
+            os.path.join(CSV_DIR, 'output_les_dis_' + str(lesion) + '.csv'),
+            sep=" ", header=True, index=True
+        ) #修改
 	
 		# Create output_pre_post_synaptic_ratio_'lesion_name'.csv (please see README file for more details)
         pre_pos_ratio = pd.DataFrame(radii3, index=['A4B2 presynaptic', 'M1 presynaptic', 'D1 presynaptic', 'D2 presynaptic', '5HT1a presynaptic', '5HT1b presynaptic', '5HT2a presynaptic', '5HT4 presynaptic', '5HT6 presynaptic', 'VAChT postsynaptic', 'DAT postsynaptic', '5HTT postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
         pre_pos_ratio = pre_pos_ratio.transpose()
-        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio.to_csv(
+            os.path.join(CSV_DIR, 'output_pre_post_synaptic_ratio_' + str(lesion) + '.csv'),
+            sep=" ", header=True, index=True
+        )
 
 		# Create output_'lesion_name'.png (please see README file for more details)
-        plt.savefig('output_'+str(lesion)+'.png', bbox_inches='tight')
-        plt.clf()
+        plt.savefig(
+            os.path.join(PNG_DIR, 'output_' + str(lesion) + '.png'),
+            bbox_inches='tight'
+        )
+        plt.close(fig)
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt.sh' command
-        os.remove('output_'+str(lesion)+'.csv')
+        shutil.move(
+            tmp_csv,
+            os.path.join(CSV_DIR, 'output_' + str(lesion) + '.csv')
+        )
 
 subprocess.run(cmd_lesion_int_nt, shell=True)
 individual_profile()
