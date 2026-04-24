@@ -32,6 +32,10 @@ def individual_profile():
         all_tract_inj = tab.loc['injuries', ['A4B2_con', 'M1_con', 'VAChT_con', 'D1_con', 'D2_con', 'DAT_con', 'NAT_con', '5HT1a_con', '5HT1b_con', '5HT2a_con', '5HT4_con', '5HT6_con', '5HTT_con']]
         all_tract_tot = tab.loc['totals', ['A4B2_con', 'M1_con', 'VAChT_con', 'D1_con', 'D2_con', 'DAT_con', 'NAT_con', '5HT1a_con', '5HT1b_con', '5HT2a_con', '5HT4_con', '5HT6_con', '5HTT_con']]
         all_tract_perc = all_tract_inj/all_tract_tot*100
+        
+        all_max_inj = tab.loc['injuries', ['A4B2_max', 'M1_max', 'VAChT_max', 'D1_max', 'D2_max', 'DAT_max', 'NAT_max', '5HT1a_max', '5HT1b_max', '5HT2a_max', '5HT4_max', '5HT6_max', '5HTT_max']]
+        all_max_tot = tab.loc['totals', ['A4B2_max', 'M1_max', 'VAChT_max', 'D1_max', 'D2_max', 'DAT_max', 'NAT_max', '5HT1a_max', '5HT1b_max', '5HT2a_max', '5HT4_max', '5HT6_max', '5HTT_max']]
+        all_max_perc = all_tract_inj/all_tract_tot*100
 
         recep_inj = tab.loc['injuries', ['A4B2_loc', 'M1_loc', 'D1_loc', 'D2_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc']]
         recep_tot = tab.loc['totals', ['A4B2_loc', 'M1_loc', 'D1_loc', 'D2_loc', '5HT1a_loc', '5HT1b_loc', '5HT2a_loc', '5HT4_loc', '5HT6_loc']]
@@ -48,6 +52,14 @@ def individual_profile():
         trans_tract_inj = tab.loc['injuries', ['VAChT_con', 'VAChT_con', 'DAT_con', 'DAT_con', '5HTT_con', '5HTT_con', '5HTT_con', '5HTT_con', '5HTT_con']]
         trans_tract_tot = tab.loc['totals', ['VAChT_con', 'VAChT_con', 'DAT_con', 'DAT_con', '5HTT_con', '5HTT_con', '5HTT_con', '5HTT_con', '5HTT_con']]
         trans_tract_perc = trans_tract_inj/trans_tract_tot*100
+        
+        recep_max_inj = tab.loc['injuries', ['A4B2_max', 'M1_max', 'D1_max', 'D2_max', '5HT1a_max', '5HT1b_max', '5HT2a_max', '5HT4_max', '5HT6_max']]
+        recep_max_tot = tab.loc['totals', ['A4B2_max', 'M1_max', 'D1_max', 'D2_max', '5HT1a_max', '5HT1b_max', '5HT2a_max', '5HT4_max', '5HT6_max']]
+        recep_max_perc = recep_tract_inj/recep_tract_tot*100
+
+        trans_max_inj = tab.loc['injuries', ['VAChT_max', 'VAChT_max', 'DAT_max', 'DAT_max', '5HTT_max', '5HTT_max', '5HTT_max', '5HTT_max', '5HTT_max']]
+        trans_max_tot = tab.loc['totals', ['VAChT_max', 'VAChT_max', 'DAT_max', 'DAT_max', '5HTT_max', '5HTT_max', '5HTT_max', '5HTT_max', '5HTT_max']]
+        trans_max_perc = trans_tract_inj/trans_tract_tot*100
 
 		# Create the plot with: 
 		# the percentage of each neurotransmitter system disrupted by the lesion, according to the receptor and transporter location density (location maps injury; left upper plot) and white matter projections (tract maps injury; left bottom plot)
@@ -64,7 +76,8 @@ def individual_profile():
         radii1 = all_perc
         ax1.bar(theta1, radii1, width=width1, bottom=0.0, color=colors1, alpha=1, edgecolor='dimgray')
         ax1.yaxis.set_major_formatter('{x:1.3f}%')
-        ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        if radii1.max() != 0:
+        	ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
         ax1.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -79,7 +92,8 @@ def individual_profile():
         radii2 = all_tract_perc
         ax2.bar(theta2, radii2, width=width2, bottom=0.0, color=colors2, alpha=1, edgecolor='dimgray')
         ax2.yaxis.set_major_formatter('{x:1.3f}%')
-        ax2.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        if radii2.max() != 0:
+        	ax2.set_yticks(np.arange(0, radii2.max(), radii2.max()/5))
         ax2.set_rlabel_position(0)
         ax2.set_xticks(theta2)
         ax2.set_xticklabels(['A4B2R', 'M1R', 'VAChT', 'D1R', 'D2R', 'DAT', 'NAT', '5HT1aR', '5HT1bR', '5HT2aR', '5HT4R', '5HT6R', '5HTT'])
@@ -92,16 +106,16 @@ def individual_profile():
         theta3 = np.arange(0, 2 * np.pi, 2 * np.pi/12)
         radii3a = []
         for i in range(len(recep_tract_perc)):
-            if recep_tract_perc[i] == 0 and recep_perc[i] == 0:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/0.1)
+            if recep_max_perc[i] == 0:
+                radii3a.append(float('inf'))
             else:
-                radii3a.append(max(trans_perc[i], trans_tract_perc[i])/max(recep_perc[i], recep_tract_perc[i]))
+                radii3a.append(trans_max_perc[i]/recep_max_perc[i])
         radii3b = []
         for i in range(len(recep_tract_perc)):
-            if trans_tract_perc[i] == 0 and trans_perc[i] == 0:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/0.1)
+            if trans_max_perc[i] == 0:
+                radii3b.append(float('inf'))
             else:
-                radii3b.append(max(recep_perc[i], recep_tract_perc[i])/max(trans_perc[i], trans_tract_perc[i]))
+                radii3b.append(recep_max_perc[i]/trans_max_perc[i])
         radii3b = [(radii3b[0]+radii3b[1])/2, (radii3b[2]+radii3b[3])/2, (radii3b[4]+radii3b[5]+radii3b[6]+radii3b[7]+radii3b[8])/5]
         radii3 = np.append(radii3a, radii3b)
         colors3 = []
@@ -111,10 +125,11 @@ def individual_profile():
             else:
                 colors3.append((0.96,0.95,0.70,1))
         radii3=np.log(radii3)
-        radii3 = np.where(radii3==-np.inf, -1, radii3)
-        ax3.bar(theta3, radii3, width=width3, bottom=0.0, color=colors3, edgecolor='dimgray')
+        radii3_inf_changed = np.where(radii3==-np.inf, -10, radii3)
+        radii3_inf_changed = np.where(radii3_inf_changed==np.inf, 10,  radii3_inf_changed)
+        ax3.bar(theta3, radii3_inf_changed, width=width3, bottom=0.0, color=colors3, edgecolor='dimgray')
         ax3.set_ylim([-1, 1])
-        ax3.set_yticks([np.floor(radii3.min()), np.floor(radii3.min())/2, 0, np.ceil(radii3.max())/2, np.ceil(radii3.max())])
+        ax3.set_yticks([np.floor(radii3_inf_changed.min()), np.floor(radii3_inf_changed.min())/2, 0, np.ceil(radii3_inf_changed.max())/2, np.ceil(radii3_inf_changed.max())])
         ax3.set_rlabel_position(0)
         ax3.set_xticks(theta3)
         ax3.set_xticklabels(['A4B2 presynaptic', 'M1 presynaptic', 'D1 presynaptic', 'D2 presynaptic', '5HT1a presynaptic', '5HT1b presynaptic', '5HT2a presynaptic', '5HT4 presynaptic', '5HT6 presynaptic', 'VAChT postsynaptic', 'DAT postsynaptic', '5HTT postsynaptic'])
@@ -125,15 +140,18 @@ def individual_profile():
 		# Create output_les_dis_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
         output_les_dis = pd.DataFrame(output_les_dis, columns=['A4B2', 'M1', 'VAChT', 'D1', 'D2', 'DAT', 'Nor', '5HT1a', '5HT1b', '5HT2a', '5HT4', '5HT6', '5HTT'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
-        output_les_dis.to_csv('output_les_dis_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        output_les_dis.to_csv('output_les_dis_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
 	
 		# Create output_pre_post_synaptic_ratio_'lesion_name'.csv (please see README file for more details)
         pre_pos_ratio = pd.DataFrame(radii3, index=['A4B2 presynaptic', 'M1 presynaptic', 'D1 presynaptic', 'D2 presynaptic', '5HT1a presynaptic', '5HT1b presynaptic', '5HT2a presynaptic', '5HT4 presynaptic', '5HT6 presynaptic', 'VAChT postsynaptic', 'DAT postsynaptic', '5HTT postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
         pre_pos_ratio = pre_pos_ratio.transpose()
-        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_'+str(lesion)+'.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio = pd.DataFrame(radii3_inf_changed, index=['A4B2 presynaptic', 'M1 presynaptic', 'D1 presynaptic', 'D2 presynaptic', '5HT1a presynaptic', '5HT1b presynaptic', '5HT2a presynaptic', '5HT4 presynaptic', '5HT6 presynaptic', 'VAChT postsynaptic', 'DAT postsynaptic', '5HTT postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
+        pre_pos_ratio = pre_pos_ratio.transpose()
+        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_inf_changed_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
 
 		# Create output_'lesion_name'.png (please see README file for more details)
-        plt.savefig('output_'+str(lesion)+'.png', bbox_inches='tight')
+        plt.savefig('output_'+str(lesion)+'_v3.0.png', bbox_inches='tight')
         plt.clf()
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt.sh' command

@@ -1,0 +1,4 @@
+'mesocorticolimbic' means that the PET scale01 images were masked for the mesocorticolimbic fiber map.
+The mask was created by adding and binarizing the functionnectome maps of D1_mesocorticolimbic, D2_mesocorticolimbic and DAT_mesocorticolimbic
+
+The equivalent for 'nigrostriatal'

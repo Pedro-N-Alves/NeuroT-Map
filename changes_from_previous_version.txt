@@ -1,0 +1,2 @@
+Changes form previous version:
+- The functionnectome was run using a gray matter mask (in the original Functionnectome article, a gray matter mask is used as well). The gray matter was was composed by the AAL3 atlas and the neurotransmitter producing nuclei included in priors selection.
