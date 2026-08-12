@@ -8,8 +8,8 @@ fi
 
 # Calculate the proportion of receptor or transporter location density map voxels ('maps_loc') and receptor or transporter white matter projection map voxels (maps_tract) intersected by the lesion
 for lesion in ${lesions[@]}; do
-	maps_r=(GABAa mGluR5 MU H3 CB1)
-	maps_t=(GABAa mGluR5 MU H3 CB1)
+	maps_r=(GABAa mGluR5 NMDA MU H3 CB1)
+	maps_t=(GABAa mGluR5 NMDA MU H3 CB1)
 
 	labels=(maps)
 	totals=(totals)

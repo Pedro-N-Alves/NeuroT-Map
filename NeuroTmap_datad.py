@@ -25,12 +25,12 @@ def individual_profile():
         # 'trans_tract_inj' refers to the transporter white matter projection map voxels intersected by the lesion
         tab=pd.read_csv('output_datad_'+str(lesion)+'.csv', sep=" ", index_col=0)
 
-        all_inj = tab.loc['injuries', ['GABAa_loc', 'mGluR5_loc', 'MU_loc', 'H3_loc', 'CB1_loc']]
-        all_tot = tab.loc['totals', ['GABAa_loc', 'mGluR5_loc', 'MU_loc', 'H3_loc', 'CB1_loc']]
+        all_inj = tab.loc['injuries', ['GABAa_loc', 'mGluR5_loc', 'NMDA_loc', 'MU_loc', 'H3_loc', 'CB1_loc']]
+        all_tot = tab.loc['totals', ['GABAa_loc', 'mGluR5_loc', 'NMDA_loc', 'MU_loc', 'H3_loc', 'CB1_loc']]
         all_perc = all_inj/all_tot*100
 
-        all_tract_inj = tab.loc['injuries', ['GABAa_con', 'mGluR5_con', 'MU_con', 'H3_con', 'CB1_con']]
-        all_tract_tot = tab.loc['totals', ['GABAa_con', 'mGluR5_con', 'MU_con', 'H3_con', 'CB1_con']]
+        all_tract_inj = tab.loc['injuries', ['GABAa_con', 'mGluR5_con', 'NMDA_con', 'MU_con', 'H3_con', 'CB1_con']]
+        all_tract_tot = tab.loc['totals', ['GABAa_con', 'mGluR5_con', 'NMDA_con', 'MU_con', 'H3_con', 'CB1_con']]
         all_tract_perc = all_tract_inj/all_tract_tot*100
 
 
@@ -42,40 +42,40 @@ def individual_profile():
         ax2 = fig.add_subplot(223, projection='polar')
 
         # Percentage of each neurotransmitter system disrupted by the lesion, according to the receptor and transporter location density (location maps injury)
-        width1 = 2 * np.pi/5 - 2 * np.pi/5 * 0.1
-        theta1 = np.arange(0, 2 * np.pi, 2 * np.pi/5)
-        colors1 = ["#6184B1", "#ECC1FF", "#B5C695", "#FCC477", "#ED967C"]
+        width1 = 2 * np.pi/6 - 2 * np.pi/6 * 0.1
+        theta1 = np.arange(0, 2 * np.pi, 2 * np.pi/6)
+        colors1 = ["#6184B1", "#ECC1FF", "#ED42D6", "#B5C695", "#FCC477", "#ED967C"]
         radii1 = all_perc
         ax1.bar(theta1, radii1, width=width1, bottom=0.0, color=colors1, alpha=1, edgecolor='dimgray')
         ax1.yaxis.set_major_formatter('{x:1.3f}%')
         if radii1.max() != 0:
-        	ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/5))
+        	ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/6))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
-        ax1.set_xticklabels(['GABAa', 'mGluR5', 'MOR', 'H3R', 'CB1R'])
+        ax1.set_xticklabels(['GABAa', 'mGluR5', 'NMDA', 'MOR', 'H3R', 'CB1R'])
         ax1.set_title('receptor/transporter lesion')
         ax1.set_theta_offset(np.pi/2)
         ax1.set_theta_direction(-1)
 
         # Percentage of each neurotransmitter system disrupted by the lesion, according to the white matter projections (tract maps injury)
-        width2 = 2 * np.pi/5 - 2 * np.pi/5 * 0.1
-        theta2 = np.arange(0, 2 * np.pi, 2 * np.pi/5)
-        colors2 = ["#6184B1", "#ECC1FF", "#B5C695", "#FCC477", "#ED967C"]
+        width2 = 2 * np.pi/6 - 2 * np.pi/6 * 0.1
+        theta2 = np.arange(0, 2 * np.pi, 2 * np.pi/6)
+        colors2 = ["#6184B1", "#ECC1FF", "#ED42D6", "#B5C695", "#FCC477", "#ED967C"]
         radii2 = all_tract_perc
         ax2.bar(theta2, radii2, width=width2, bottom=0.0, color=colors2, alpha=1, edgecolor='dimgray')
         ax2.yaxis.set_major_formatter('{x:1.3f}%')
         if radii2.max() != 0:
-        	ax2.set_yticks(np.arange(0, radii2.max(), radii2.max()/5))
+        	ax2.set_yticks(np.arange(0, radii2.max(), radii2.max()/6))
         ax2.set_rlabel_position(0)
         ax2.set_xticks(theta2)
-        ax2.set_xticklabels(['GABAa', 'mGluR5', 'MOR', 'H3R', 'CB1R'])
+        ax2.set_xticklabels(['GABAa', 'mGluR5', "NMDA", 'MOR', 'H3R', 'CB1R'])
         ax2.set_title('receptor/transporter disconnection')
         ax2.set_theta_offset(np.pi/2)
         ax2.set_theta_direction(-1)
 
 		# Create output_les_dis_datad_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
-        output_les_dis = pd.DataFrame(output_les_dis, columns=['GABAa', 'mGluR5', 'MU', 'H3', 'CB1'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
+        output_les_dis = pd.DataFrame(output_les_dis, columns=['GABAa', 'mGluR5', 'NMDA', 'MU', 'H3', 'CB1'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
         output_les_dis.to_csv('output_les_dis_datad_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
 
 		# Create output_datad_'lesion_name'.png (please see README file for more details)
