@@ -140,18 +140,18 @@ def individual_profile():
 		# Create output_les_dis_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
         output_les_dis = pd.DataFrame(output_les_dis, columns=['A4B2_basalforebrain', 'M1_basalforebrain', 'VAChT_basalforebrain', 'A4B2_pontomesencephalic', 'M1_pontomesencephalic', 'VAChT_pontomesencephalic', 'D1_mesocorticolimbic', 'D2_mesocorticolimbic', 'DAT_mesocorticolimbic', 'D1R_nigrostriatal', 'D2R_nigrostriatal', 'DAT_nigrostriatal'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
-        output_les_dis.to_csv('output_les_dis_subcircuits_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
+        output_les_dis.to_csv('output_les_dis_subcircuits_'+str(lesion)+'_v2.0.csv', sep=" ", header=True, index=True)
 	
 		# Create output_pre_post_synaptic_ratio_'lesion_name'.csv (please see README file for more details)
         pre_pos_ratio = pd.DataFrame(radii3, index=['A4B2_basalforebrain presynaptic', 'M1_basalforebrain presynpatic', 'VAChT_basalforebrain postsynaptic', 'A4B2_pontomesencephalic presynaptic', 'M1_pontomesencephalic presynaptic', 'VAChT_pontomesencephalic postsynaptic', 'D1_mesocorticolimbic presynaptic', 'D2_mesocorticolimbic presynaptic', 'DAT_mesocorticolimbic postsynaptic', 'D1_nigrostriatal presynaptic', 'D2_nigrostriatal presynaptic', 'DAT_nigrostriatal postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
         pre_pos_ratio = pre_pos_ratio.transpose()
-        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_subcircuits_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_subcircuits_'+str(lesion)+'_v2.0.csv', sep=" ", header=True, index=True)
         pre_pos_ratio = pd.DataFrame(radii3_inf_changed, index=['A4B2_basalforebrain presynaptic', 'M1_basalforebrain presynpatic', 'VAChT_basalforebrain postsynaptic', 'A4B2_pontomesencephalic presynaptic', 'M1_pontomesencephalic presynaptic', 'VAChT_pontomesencephalic postsynaptic', 'D1_mesocorticolimbic presynaptic', 'D2_mesocorticolimbic presynaptic', 'DAT_mesocorticolimbic postsynaptic', 'D1_nigrostriatal presynaptic', 'D2_nigrostriatal presynaptic', 'DAT_nigrostriatal postsynaptic'], columns=['pre_pos_ratio_'+str(lesion)])
         pre_pos_ratio = pre_pos_ratio.transpose()
-        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_inf_changed_subcircuits_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
+        pre_pos_ratio.to_csv('output_pre_post_synaptic_ratio_inf_changed_subcircuits_'+str(lesion)+'_v2.0.csv', sep=" ", header=True, index=True)
 
 		# Create output_'lesion_name'.png (please see README file for more details)
-        plt.savefig('output_subcircuits_'+str(lesion)+'_v3.0.png', bbox_inches='tight')
+        plt.savefig('output_subcircuits_'+str(lesion)+'_v2.0.png', bbox_inches='tight')
         plt.clf()
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt.sh' command

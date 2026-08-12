@@ -52,7 +52,7 @@ def individual_profile():
         	ax1.set_yticks(np.arange(0, radii1.max(), radii1.max()/6))
         ax1.set_rlabel_position(0)
         ax1.set_xticks(theta1)
-        ax1.set_xticklabels(['GABAa', 'mGluR5', 'NMDA', 'MOR', 'H3R', 'CB1R'])
+        ax1.set_xticklabels(['GABAaR', 'mGluR5', 'NMDAR', 'MOR', 'H3R', 'CB1R'])
         ax1.set_title('receptor/transporter lesion')
         ax1.set_theta_offset(np.pi/2)
         ax1.set_theta_direction(-1)
@@ -68,7 +68,7 @@ def individual_profile():
         	ax2.set_yticks(np.arange(0, radii2.max(), radii2.max()/6))
         ax2.set_rlabel_position(0)
         ax2.set_xticks(theta2)
-        ax2.set_xticklabels(['GABAa', 'mGluR5', "NMDA", 'MOR', 'H3R', 'CB1R'])
+        ax2.set_xticklabels(['GABAa', 'mGluR5', "NMDAR", 'MOR', 'H3R', 'CB1R'])
         ax2.set_title('receptor/transporter disconnection')
         ax2.set_theta_offset(np.pi/2)
         ax2.set_theta_direction(-1)
@@ -76,10 +76,10 @@ def individual_profile():
 		# Create output_les_dis_datad_'lesion_name'.csv (please see README file for more details)
         output_les_dis = np.vstack([all_inj, all_perc, all_tract_inj, all_tract_perc])
         output_les_dis = pd.DataFrame(output_les_dis, columns=['GABAa', 'mGluR5', 'NMDA', 'MU', 'H3', 'CB1'], index=['loc_inj_'+str(lesion), 'loc_inj_perc_'+str(lesion), 'tract_inj_'+str(lesion), 'tract_inj_perc_'+str(lesion)])
-        output_les_dis.to_csv('output_les_dis_datad_'+str(lesion)+'_v3.0.csv', sep=" ", header=True, index=True)
+        output_les_dis.to_csv('output_les_dis_datad_'+str(lesion)+'_v2.0.csv', sep=" ", header=True, index=True)
 
 		# Create output_datad_'lesion_name'.png (please see README file for more details)
-        plt.savefig('output_datad_'+str(lesion)+'_v3.0.png', bbox_inches='tight')
+        plt.savefig('output_datad_'+str(lesion)+'_v2.0.png', bbox_inches='tight')
         plt.clf()
         
         # Remove .csv file generated in the 'NeuroTmap_lesion_int_nt_datad.sh' command
