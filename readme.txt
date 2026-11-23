@@ -6,7 +6,7 @@ Hereby, we present the steps to use this tool:
 1. Download the NeuroT-map zip file from git-hub and unzip it
 2. Inside the generated folder ('NeuroT-Map-main'), create a folder named 'lesions'
 3. Paste the stroke lesions you want to study inside the folder 'lesions'
-- the lesions should be binary maps, normalized to the MNI152 152 2mm
+- the lesions should be binary maps, normalized to the MNI152 2mm
 - they should be in the NIFTI format
 4. Run the python command NeuroTmap.py
 - The required packages are: numpy, pandas, matplotlib, argparse, subprocess and os.
